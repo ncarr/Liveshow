@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Realtime Presentation Editor</title>
+    <link href="style.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="https://code.getmdl.io/1.1.3/material.indigo-pink.min.css">
+    <link rel="stylesheet" href="mdl-speed-dial.css">
+    <link href='//fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'>
+    <script defer src="https://code.getmdl.io/1.1.3/material.min.js"></script>
+</head>
+
+<body class="container-fluid">
+    <div class="mdl-layout mdl-js-layout mdl-layout--fixed-drawer mdl-layout--fixed-header">
+      <header class="mdl-layout__header mdl-color--white mdl-color-text--grey-600">
+        <div aria-expanded="false" role="button" tabindex="0" class="mdl-layout__drawer-button mdl-layout--small-screen-only mdl-color-text--grey-600">
+          <i class="material-icons">view_module</i>
+        </div>
+        <div class="mdl-layout__header-row">
+          <input type="text" class="mdl-layout-title" id="title" value="<%= name %>" />
+          <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect present" style="margin-left: 10px;"><i class="material-icons">ondemand_video</i> Present</button>
+          <button class="mdl-button mdl-js-button mdl-button--icon present" style="margin-left: 10px;">
+            <i class="material-icons">ondemand_video</i>
+          </button>
+          <div class="mdl-layout-spacer"></div>
+
+          <div class="mdl-speed-dial mdl-speed-dial--header-edge">
+            <button class="mdl-speed-dial__main-fab mdl-speed-dial__main-fab--spin mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored">
+              <i class="material-icons mdl-speed-dial_main-fab-icon">add</i>
+            </button>
+
+            <div class="mdl-speed-dial__options">
+              <div class="mdl-speed-dial__option">
+                <p class="mdl-speed-dial__tooltip">New slide</p>
+                <a href="#" class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-button--colored new-slide">
+                  <i class="material-icons">art_track</i>
+                </a>
+              </div>
+              <div class="mdl-speed-dial__option">
+                <p class="mdl-speed-dial__tooltip">New presentation</p>
+                <a href="#" class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-button--colored new-presentation">
+                  <i class="material-icons">insert_drive_file</i>
+                </a>
+              </div>
+              <div class="mdl-speed-dial__option">
+                <p class="mdl-speed-dial__tooltip">New screen</p>
+                <a href="#" class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-button--colored new-screen">
+                  <i class="material-icons">desktop_windows</i>
+                </a>
+              </div>
+              <div class="mdl-speed-dial__option">
+                <p class="mdl-speed-dial__tooltip">Add participants</p>
+                <a href="#" class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-button--colored share">
+                  <i class="material-icons">share</i>
+                </a>
+              </div>
+              <div class="mdl-speed-dial__option">
+                <p class="mdl-speed-dial__tooltip">Insert image</p>
+                <a href="#" class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-button--colored add-image">
+                  <i class="material-icons">image</i>
+                </a>
+              </div>
+              <div class="mdl-speed-dial__option">
+                <p class="mdl-speed-dial__tooltip">Insert video</p>
+                <a href="#" class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-button--colored add-video">
+                  <i class="material-icons">movie</i>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </header>
+      <div class="mdl-layout__drawer mdl-layout__drawer--right mdl-layout--no-drawer-button">
+        <div class="mdl-layout__header-row">
+          <i class="mdl-layout-icon material-icons" style="margin-right: 10px;">desktop_windows</i>
+          <span class="mdl-layout-title">Liveshow</span>
+          <div class="mdl-layout-spacer"></div>
+          <button class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-js-ripple-effect mdl-button--colored mdl-layout--small-screen-only">
+            <i class="material-icons">add</i>
+          </button>
+        </div>
+        <nav class="mdl-navigation">
+          <a class="mdl-navigation__link" href="">Slide 1</a>
+          <a class="mdl-navigation__link" href="">Slide 2</a>
+          <a class="mdl-navigation__link" href="">Slide 3</a>
+          <a class="mdl-navigation__link" href="">Slide 4</a>
+        </nav>
+      </div>
+      <main class="mdl-layout__content">
+        <div class="page-content mdl-grid">
+          <div class="mdl-grid mdl-grid--no-spacing mdl-cell--9-col main-slides" style="display: block;">
+            <span class="pagenum mdl-cell--12-col">Display 1</span>
+            <div style="position: relative; width: 100%; padding-bottom: 56.25%;">
+              <div style="position: absolute; left: 0px; right: 0px; top: 0px; bottom: 0px;">
+                <div style="height: 100%; width: 100%;" class="mdl-card mdl-shadow--2dp mdl-color--cyan-500 slide">
+                  <div class="mdl-card__title mdl-card--expand">
+                    <h2 class="mdl-card__title-text" contenteditable="">Title</h2>
+                  </div>
+                  <div class="mdl-card__supporting-text" contenteditable="">
+                  This is content.
+                  </div>
+                </div>
+              </div>
+            </div>
+            <span class="pagenum mdl-cell--12-col">Display 2</span>
+            <div style="position: relative; width: 100%; padding-bottom: 56.25%;">
+              <div style="position: absolute; left: 0px; right: 0px; top: 0px; bottom: 0px;">
+                <div style="height: 100%; width: 100%;" class="mdl-card mdl-shadow--2dp mdl-color--cyan-500">
+                  <div class="mdl-card__title mdl-card--expand">
+                    <h2 class="mdl-card__title-text" contenteditable="">Title</h2>
+                  </div>
+                  <div class="mdl-card__supporting-text" contenteditable="">
+                  This is content.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="mdl-cell mdl-shadow--2dp mdl-cell--3-col mdl-card">
+            <div class="mdl-card__supporting-text mdl-grid designs">
+              <h4 class="mdl-cell mdl-cell--12-col">Designs</h4>
+              Colour:
+              <button class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-js-ripple-effect mdl-button--colored mdl-color--cyan-500"></button>
+              <div class="mdl-shadow--2dp mdl-card mdl-color--cyan-500">
+                <div class="mdl-card__title mdl-card--expand">
+                  <h2 class="mdl-card__title-text">Title</h2>
+                </div>
+                <div class="mdl-card__supporting-text">
+                  This is content.
+                </div>
+              </div>
+              <div class="mdl-shadow--2dp mdl-card mdl-color--cyan-500">
+                <div class="mdl-card__title" style="background-image: url(jd.jpg); display: block; background-size: cover">
+                  <h3 class="flush mdl-color-text--blue-500">John Doe</h3>
+                  <h5 class="flush mdl-color-text--blue-500">@example</h5>
+                  <h6 class="flush mdl-color-text--blue-500">Speaker Info Specialist</h6>
+                </div>
+                <div class="mdl-card__supporting-text">
+                  This is the shortest bio you have ever seen.
+                </div>
+              </div>
+              <div class="mdl-shadow--2dp mdl-card">
+                <div class="mdl-card__title mdl-card--expand" style="align-items: center; justify-content: center; background: url(material.jpg); background-size: cover;">
+                  <h4 style="text-transform: uppercase; font-weight: 600;">Title</h4>
+                </div>
+              </div>
+              <div class="mdl-shadow--2dp mdl-card mdl-color--cyan-500">
+                <div class="mdl-card__title">
+                  <h4 class="flush">Title</h4>
+                </div>
+                <div class="mdl-card__supporting-text">
+                  This is content.
+                </div>
+              </div>
+              <div class="mdl-shadow--2dp mdl-card">
+                <div class="mdl-card__title mdl-card--expand" style="background: url(material.jpg); background-size: cover;"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <script src="/share/share.uncompressed.js"></script>
+    <script src="/share/json.uncompressed.js"></script>
+    <script src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
+    <script src="script.js"></script>
+    <script src="mdl-speed-dial.js"></script>
+    <script src="stretchy.js" data-filter="#title"></script>
+</body>
+</html>

@@ -1,0 +1,28 @@
+{
+  "name": "Liveshow",
+  "version": "1.0.0",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:ncarr/Liveshow.git"
+  },
+  "description": "A real-time collaborative presenter view and presentation editing web app.",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "collaborative",
+    "realtime",
+    "sharejs",
+    "liveshow",
+    "presentation"
+  ],
+  "author": "Nicholas Carr",
+  "license": "ISC",
+  "dependencies": {
+    "ejs": "^2.5.1",
+    "express": "^4.14.0",
+    "redis": "^2.6.2",
+    "share": "^0.6.3"
+  }
+}

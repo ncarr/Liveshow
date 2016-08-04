@@ -1,0 +1,22 @@
+button.mdl-button--icon.present {
+    display: none;
+}
+.flush {
+  margin: 0px;
+}
+#title {
+  border: solid transparent 1px;
+  box-sizing: content-box;
+  padding: 10px;
+}
+#title:hover, #title:focus {
+  border: solid grey 1px;
+}
+@media only screen and (max-width: 485px) {
+    button.mdl-button--raised.present {
+        display: none;
+    }
+    button.mdl-button--icon.present {
+        display: block;
+    }
+}
