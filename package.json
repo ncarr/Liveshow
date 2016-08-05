@@ -5,7 +5,7 @@
     "type": "git",
     "url": "git@github.com:ncarr/Liveshow.git"
   },
-  "description": "A real-time collaborative presenter view and presentation editing web app.",
+  "description": "A real-time collaborative presenter view and presentation editor",
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

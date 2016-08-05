@@ -24,5 +24,18 @@ window.onload = function() {
         };
 
         pullTitle();
+
+        $(".new-slide").click(function() {
+          $('.mdl-navigation').each(function(){
+            var new_data = $('a:last', this).clone();
+            new_data.html("Slide " + ($(this).children().length + 1).toString())
+            new_data.appendTo(this);
+          });
+        });
+        $(".new-screen").click(function() {
+          var new_data = $('.main-slides > .slide-wrapper:last').clone();
+          $(new_data).children("span.pagenum").html("Display " + ($(".main-slides").children().length + 1).toString())
+          new_data.appendTo($(".main-slides"));
+        });
     });
 };
