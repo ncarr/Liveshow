@@ -12,6 +12,22 @@ button.mdl-button--icon.present {
 #title:hover, #title:focus {
   border: solid grey 1px;
 }
+.aspect {
+  position: relative;
+  width: 100%;
+  padding-bottom: 56.25%;
+}
+.stretch {
+  position: absolute;
+  left: 0px;
+  right: 0px;
+  top: 0px;
+  bottom: 0px;
+}
+.stretch .slide {
+  height: 100%;
+  width: 100%;
+}
 @media only screen and (max-width: 485px) {
     button.mdl-button--raised.present {
         display: none;
