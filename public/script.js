@@ -5,6 +5,71 @@ window.onload = function() {
         if (error) {
           return;
         }
+        if (doc.get() === null) {
+          doc.set({
+            "title": "Untitled document",
+            "id": "0",
+            "presentations": {},
+            "background": "#00bcd4",
+            "foreground": "#000000",
+            "accent": "#ff4081",
+            "accent-foreground": "#ffffff",
+            "content":
+            {
+              "slides":
+              [
+                [
+                  {
+                    "style": "presentation-title",
+                    "content":
+                    [
+                      {
+                        "style": "title",
+                        "content": "Add a title"
+                      }
+                    ]
+                  },
+                  {
+                    "style": "speaker",
+                    "content":
+                    [
+                      {
+                        "style": "title",
+                        "content": "John Doe"
+                      },
+                      {
+                        "style": "subheading",
+                        "content": "@example"
+                      },
+                      {
+                        "style": "subheading",
+                        "content": "Job Title"
+                      },
+                      {
+                        "style": "supporting-text",
+                        "content": "Add a short bio"
+                      }
+                    ]
+                  },
+                  {
+                    "style": "content",
+                    "content":
+                    [
+                      {
+                        "style": "title",
+                        "content": "Add a title"
+                      },
+                      {
+                        "style": "supporting-text",
+                        "content": "Add some content"
+                      }
+                    ]
+                  }
+                ]
+              ]
+            }
+          });
+        }
         var name = doc.at('title');
         doc.on('remoteop', pullTitle);
         title.onblur = pushTitle;
