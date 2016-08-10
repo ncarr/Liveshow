@@ -42,10 +42,12 @@ window.onload = function() {
           var slidewrapper = $(".main-slides > .slide-wrapper:first").clone();
           $(".main-slides").empty();
           $.each(slides, function(key, value) {
+            slidewrapper = slidewrapper.clone();
             $(".pagenum", slidewrapper).html("Display " + (key + 1).toString());
             slide = value[index];
-            $(".slide", slidewrapper).addClass(slide["style"]).empty();
-            $.each(slide["content"], function(index, val) {
+            $(".stretch", slidewrapper).empty();
+            $('<div class="mdl-card mdl-shadow--2dp slide"></div>').addClass(slide["style"]).appendTo($(".stretch", slidewrapper))
+            $.each(slide["content"], function(i, val) {
               if (val["style"] == "title") {
                 slidewrapper.find(".slide").append('<div class="mdl-card__title mdl-card--expand"><h2 class="mdl-card__title-text" contenteditable>' + val["content"] + '</h2></div>')
               } else if (val["style"] == "subheading") {
@@ -56,6 +58,7 @@ window.onload = function() {
             });
             slidewrapper.appendTo($(".main-slides"));
           });
+          loadColours();
         }
 
         renderSlide(0);
@@ -64,7 +67,9 @@ window.onload = function() {
           $('.mdl-navigation').each(function(){
             var new_data = $('a:last', this).clone();
             new_data.html("Slide " + ($(this).children().length + 1).toString());
-            new_data.appendTo(this);
+            new_data.appendTo(this).click(function(e) {
+              renderSlide($(this).children().length);
+            });
             screens = doc.at(['content', 'slides']).get();
             $.each(screens, function(index, value) {
               doc.at(['content', 'slides', index]).push({"style": "content", "content": [{"style": "title", "content": "Add a title"}, {"style": "supporting-text", "content": "Add some content"}]});
@@ -78,6 +83,50 @@ window.onload = function() {
           screens = doc.at(['content', 'slides']);
           snapshot = screens.get();
           screens.push(snapshot[snapshot.length - 1]);
+        });
+        function updateSlideColour(type, colour) {
+          if (type == "primary") {
+            $("#primary-colour-menu").css("background-color", colour);
+            $("main .slide").css("background-color", colour);
+          }
+          if (type == "accent") {
+            $("#accent-colour-menu").css("background-color", colour);
+            $(".mdl-button--colored").not(".colours .mdl-button--colored").css("background-color", colour);
+          }
+          if (type == "text") {
+            $("#text-colour-menu").css("background-color", colour);
+            $("main .slide").css("color", colour);
+          }
+        }
+        function loadColours() {
+          updateSlideColour("primary", doc.at("background").get());
+          updateSlideColour("accent", doc.at("accent").get());
+          updateSlideColour("text", doc.at("foreground").get());
+        }
+        loadColours();
+        function uploadColour(type, colour) {
+          updateSlideColour(type, colour);
+          if (type == "primary") {
+            doc.at("background").set(colour);
+          }
+          if (type == "accent") {
+            doc.at("accent").set(colour);
+          }
+          if (type == "text") {
+            doc.at("foreground").set(colour);
+          }
+        }
+        $(".primary-colour-list > li").click(function() {
+          var colour = $("button", this).css("background-color");
+          uploadColour("primary", colour)
+        });
+        $(".accent-colour-list > li").click(function() {
+          var colour = $("button", this).css("background-color");
+          uploadColour("accent", colour)
+        });
+        $(".text-colour-list > li").click(function() {
+          var colour = $("button", this).css("background-color");
+          uploadColour("text", colour)
         });
     });
 };
