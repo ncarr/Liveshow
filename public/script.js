@@ -71,7 +71,7 @@ window.onload = function() {
           });
         }
         var name = doc.at('title');
-        doc.on('remoteop', pullTitle);
+        doc.on('remoteop', applyChanges);
         title.onblur = pushTitle;
         title.onkeypress = function(event) {
           if (event.keyCode === 13) {
@@ -82,6 +82,30 @@ window.onload = function() {
 
         function pullTitle() {
           title.value = name.get();
+        }
+
+        function applyChanges(op) {
+          console.log(op);
+          $.each(op, function(index, value) {
+            if (value.p[0] == "background") {
+              updateSlideColour("primary", value.oi);
+            }
+            if (value.p[0] == "accent") {
+              updateSlideColour("accent", value.oi);
+            }
+            if (value.p[0] == "foreground") {
+              updateSlideColour("text", value.oi);
+            }
+            if (value.p[0] == "title") {
+              pullTitle();
+            }
+            if (value.p.length == 4 && value.p[1] == "slides" && value.p[2] == 0 && value.li) {
+              showNewSlide();
+            }
+            if (value.p.length == 3 && value.p[1] == "slides" && value.li) {
+              showNewDisplay();
+            }
+          });
         }
 
         function pushTitle() {
@@ -128,23 +152,30 @@ window.onload = function() {
 
         renderSlide(0);
 
-        $(".new-slide").click(function() {
+        function showNewSlide() {
           $('.mdl-navigation').each(function(){
             var new_data = $('a:last', this).clone();
             new_data.html("Slide " + ($(this).children().length + 1).toString());
             new_data.appendTo(this).click(function(e) {
               renderSlide($(this).children().length);
             });
-            screens = doc.at(['content', 'slides']).get();
-            $.each(screens, function(index, value) {
-              doc.at(['content', 'slides', index]).push({"style": "content", "content": [{"style": "title", "content": "Add a title"}, {"style": "supporting-text", "content": "Add some content"}]});
-            });
+          });
+        }
+        $(".new-slide").click(function() {
+          showNewSlide();
+          screens = doc.at(['content', 'slides']).get();
+          $.each(screens, function(index, value) {
+            doc.at(['content', 'slides', index]).push({"style": "content", "content": [{"style": "title", "content": "Add a title"}, {"style": "supporting-text", "content": "Add some content"}]});
           });
         });
-        $(".new-screen").click(function() {
+
+        function showNewDisplay() {
           var new_data = $('.main-slides > .slide-wrapper:last').clone();
           $(new_data).children("span.pagenum").html("Display " + ($(".main-slides").children().length + 1).toString());
           new_data.appendTo($(".main-slides"));
+        }
+        $(".new-screen").click(function() {
+          showNewDisplay();
           screens = doc.at(['content', 'slides']);
           snapshot = screens.get();
           screens.push(snapshot[snapshot.length - 1]);
