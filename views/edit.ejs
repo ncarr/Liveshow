@@ -17,7 +17,7 @@
           <i class="material-icons">view_module</i>
         </div>
         <div class="mdl-layout__header-row">
-          <input type="text" class="mdl-layout-title" id="title" value="<%= name %>" />
+          <input type="text" class="mdl-layout-title" id="title" value="<%= name %>" placeholder="Untitled document" />
           <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect present" style="margin-left: 10px;"><i class="material-icons">ondemand_video</i> Present</button>
           <button class="mdl-button mdl-js-button mdl-button--icon present" style="margin-left: 10px;">
             <i class="material-icons">ondemand_video</i>
@@ -194,6 +194,7 @@
     <script src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
     <script src="script.js"></script>
     <script src="mdl-speed-dial.js"></script>
-    <script src="stretchy.js" data-filter="#title"></script>
+    <script src="stretchy.js" data-filter="textarea"></script>
+    <script src="jquery.auto-grow-input.min.js"></script>
 </body>
 </html>

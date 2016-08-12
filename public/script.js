@@ -7,7 +7,7 @@ window.onload = function() {
         }
         if (doc.get() === null) {
           doc.set({
-            "title": "Untitled document",
+            "title": "",
             "id": "0",
             "presentations": {},
             "background": "#00bcd4",
@@ -84,6 +84,18 @@ window.onload = function() {
           title.value = name.get();
         }
 
+        function escapeHtml(text) {
+          var map = {
+            '&': '&amp;',
+            '<': '&lt;',
+            '>': '&gt;',
+            '"': '&quot;',
+            "'": '&#039;'
+          };
+
+          return text.replace(/[&<>"']/g, function(m) { return map[m]; });
+        }
+
         function applyChanges(op) {
           console.log(op);
           $.each(op, function(index, value) {
@@ -105,8 +117,15 @@ window.onload = function() {
             if (value.p.length == 3 && value.p[1] == "slides" && value.li) {
               showNewDisplay();
             }
+            if (value.p.length == 7 && value.p[1] == "slides" && value.p[5] == 0) {
+              $(".main-slides .mdl-card__title-text").val(value.oi);
+            }
+            if (value.p.length == 7 && value.p[1] == "slides" && (value.p[5] == 1 || value.p[5] == 3)) {
+              $(".main-slides .mdl-card__supporting-text").val(value.oi);
+            }
           });
         }
+
 
         function pushTitle() {
           name.set(title.value);
@@ -135,19 +154,34 @@ window.onload = function() {
             $(".pagenum", slidewrapper).html("Display " + (key + 1).toString());
             slide = value[index];
             $(".stretch", slidewrapper).empty();
-            $('<div class="mdl-card mdl-shadow--2dp slide"></div>').addClass(slide["style"]).appendTo($(".stretch", slidewrapper))
+            $('<div class="mdl-card mdl-shadow--2dp slide" data-slide="' + index + '" data-display="' + key + '"></div>').addClass(slide["style"]).appendTo($(".stretch", slidewrapper))
             $.each(slide["content"], function(i, val) {
               if (val["style"] == "title") {
-                slidewrapper.find(".slide").append('<div class="mdl-card__title mdl-card--expand"><h2 class="mdl-card__title-text" contenteditable>' + val["content"] + '</h2></div>')
+                slidewrapper.find(".slide").append('<div class="mdl-card__title mdl-card--expand"><textarea rows="1" class="mdl-card__title-text" placeholder="Add a title">' + escapeHtml(val["content"]) + '</textarea></div>')
               } else if (val["style"] == "subheading") {
-                slidewrapper.find(".mdl-card__title").addClass("subheading").append('<h6 class="flush" contenteditable>' + val["content"] + '</h6>')
+                slidewrapper.find(".mdl-card__title").addClass("subheading").append('<h6 class="flush" contenteditable>' + escapeHtml(val["content"]) + '</h6>')
               } else {
-                slidewrapper.find(".slide").append('<div class="mdl-card__supporting-text" contenteditable>' + val["content"] + '</div>')
+                slidewrapper.find(".slide").append('<textarea class="mdl-card__supporting-text">' + escapeHtml(val["content"]) + '</textarea>')
               }
             });
             slidewrapper.appendTo($(".main-slides"));
           });
           loadColours();
+          function uploadSlideTitle(display, slide, content) {
+            doc.at(["content", "slides", display, slide, "content", 0, "content"]).set(content);
+          }
+          $(".main-slides .mdl-card__title-text").blur(function() {
+            uploadSlideTitle($(this).parents(".slide").data("display"), $(this).parents(".slide").data("slide"), $(this).val());
+          });
+
+          function uploadSlideContent(display, slide, pos, content) {
+            doc.at(["content", "slides", display, slide, "content", pos, "content"]).set(content);
+            console.log("updated");
+          }
+          $(".main-slides .mdl-card__supporting-text").blur(function() {
+            uploadSlideContent($(this).parents(".slide").data("display"), $(this).parents(".slide").data("slide"), ($(this).parents(".slide").hasClass("speaker") ? 3 : 1), $(this).val());
+            console.log("blurred");
+          });
         }
 
         renderSlide(0);
@@ -225,4 +259,5 @@ window.onload = function() {
           uploadColour("text", colour)
         });
     });
+    $("#title").autoGrowInput();
 };

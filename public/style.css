@@ -35,7 +35,7 @@ button.mdl-button--icon.present {
   align-items: center;
   justify-content: center;
 }
-.slide.presentation-title h2 {
+.slide.presentation-title .mdl-card__title-text {
   text-transform: uppercase;
   font-weight: 700;
   align-self: center;
@@ -45,6 +45,19 @@ button.mdl-button--icon.present {
 }
 .mdl-card__title, .mdl-card__supporting-text {
   color: inherit !important;
+}
+.main-slides textarea {
+  background-color: transparent;
+  border: none;
+  border-bottom: solid transparent 2px;
+  font-family: "Roboto";
+  resize: none;
+}
+.main-slides textarea:hover, .main-slides textarea:focus {
+  border-bottom: solid rgba(0, 0, 0, 0.54) 2px;
+}
+.main-slides .slide.presentation-title .mdl-card__title-text {
+  text-align: center;
 }
 @media only screen and (max-width: 485px) {
     button.mdl-button--raised.present {
