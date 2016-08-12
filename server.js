@@ -19,7 +19,7 @@ require('redis');
 
 // options for sharejs
 var options = {
-  db: {type: 'redis'},
+  db: {type: 'none'},
   browserChannel: null,
   websocket: {}
 };
