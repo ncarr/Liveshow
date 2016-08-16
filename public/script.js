@@ -81,7 +81,7 @@ window.onload = function() {
         }
 
         function pullTitle() {
-          title.value = name.get();
+          $('#title').val(name.get()).trigger('autogrow');
         }
 
         function escapeHtml(text) {
@@ -118,10 +118,19 @@ window.onload = function() {
               showNewDisplay();
             }
             if (value.p.length == 7 && value.p[1] == "slides" && value.p[5] == 0) {
-              $(".main-slides .mdl-card__title-text").val(value.oi);
+              $(".main-slides .slide:nth-child(" + (value.p[2] + 1) + ") .mdl-card__title-text").val(value.oi);
             }
             if (value.p.length == 7 && value.p[1] == "slides" && (value.p[5] == 1 || value.p[5] == 3)) {
-              $(".main-slides .mdl-card__supporting-text").val(value.oi);
+              if (doc.at(value.p.slice(0, 6).concat("style")).get() == "subheading") {
+                console.log("subheading");
+                $(".main-slides .slide:nth-child(" + (value.p[2] + 1) + ") textarea.subheading:nth-child(" + (value.p[5] + 1) + ")").val(value.oi);
+              } else {
+                $(".main-slides .slide:nth-child(" + (value.p[2] + 1) + ") .mdl-card__supporting-text").val(value.oi);
+              }
+            }
+            if (value.p.length == 7 && value.p[1] == "slides" && value.p[5] == 2) {
+              console.log("subheading");
+              $(".main-slides .slide:nth-child(" + (value.p[2] + 1) + ") textarea.subheading:nth-child(" + (value.p[5] + 1) + ")").val(value.oi);
             }
           });
         }
@@ -159,7 +168,7 @@ window.onload = function() {
               if (val["style"] == "title") {
                 slidewrapper.find(".slide").append('<div class="mdl-card__title mdl-card--expand"><textarea rows="1" class="mdl-card__title-text" placeholder="Add a title">' + escapeHtml(val["content"]) + '</textarea></div>')
               } else if (val["style"] == "subheading") {
-                slidewrapper.find(".mdl-card__title").addClass("subheading").append('<h6 class="flush" contenteditable>' + escapeHtml(val["content"]) + '</h6>')
+                slidewrapper.find(".mdl-card__title").addClass("subheading").append('<textarea rows="1" class="subheading">' + escapeHtml(val["content"]) + '</textarea>')
               } else {
                 slidewrapper.find(".slide").append('<textarea class="mdl-card__supporting-text">' + escapeHtml(val["content"]) + '</textarea>')
               }
@@ -176,11 +185,12 @@ window.onload = function() {
 
           function uploadSlideContent(display, slide, pos, content) {
             doc.at(["content", "slides", display, slide, "content", pos, "content"]).set(content);
-            console.log("updated");
           }
           $(".main-slides .mdl-card__supporting-text").blur(function() {
             uploadSlideContent($(this).parents(".slide").data("display"), $(this).parents(".slide").data("slide"), ($(this).parents(".slide").hasClass("speaker") ? 3 : 1), $(this).val());
-            console.log("blurred");
+          });
+          $(".main-slides .subheading").blur(function() {
+            uploadSlideContent($(this).parents(".slide").data("display"), $(this).parents(".slide").data("slide"), $(this).index(), $(this).val());
           });
         }
 

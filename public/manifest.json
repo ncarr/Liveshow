@@ -1,0 +1,6 @@
+{
+  "short_name": "Liveshow",
+  "name": "Liveshow",
+  "start_url": "/",
+  "display": "standalone"
+}

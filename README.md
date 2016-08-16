@@ -1,6 +1,8 @@
 # Liveshow
 
-A real-time collaborative presenter view and presentation editor. Currently in development. Editor barely functional.
+A real-time collaborative presenter view and presentation editor. Currently in development. Editor mostly functional.
+
+
 
 ## Installation
 
@@ -11,6 +13,6 @@ A real-time collaborative presenter view and presentation editor. Currently in d
 
 ## Running the server
 
-`node server.js`
+`npm start`
 
 Everything is set up for you the first time you open `localhost:8000`
