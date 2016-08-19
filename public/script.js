@@ -268,6 +268,23 @@ window.onload = function() {
           var colour = $("button", this).css("background-color");
           uploadColour("text", colour)
         });
+        $("#global-colours").change(function(e) {
+          screens = doc.at(['content', 'slides']).get();
+          slide = $(this).parents(".slide").data("slide");
+          if (this.checked) {
+            $.each(screens, function () {
+              doc.at(["content", "slides", index, slide, "primary"]).set(doc.at("primary").get());
+              doc.at(["content", "slides", index, slide, "accent"]).set(doc.at("accent").get());
+              doc.at(["content", "slides", index, slide, "foreground"]).set(doc.at("foreground").get());
+            });
+          } else {
+            $.each(screens, function () {
+              doc.at(["content", "slides", index, slide, "primary"]).remove();
+              doc.at(["content", "slides", index, slide, "accent"]).remove();
+              doc.at(["content", "slides", index, slide, "foreground"]).remove();
+            });
+          }
+        })
     });
     $("#title").autoGrowInput();
 };
