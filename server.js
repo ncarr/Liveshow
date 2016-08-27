@@ -85,8 +85,11 @@ function startServer() {
   app.set('view engine', 'ejs');
   app.use(express.static('public'));
   app.get('/', function(req, res) {
-    res.render('edit', {
-      name: doc.data.title
+    doc.fetch(function (err) {
+      if (err) throw err;
+      res.render('edit', {
+        data: doc.data
+      });
     });
   });
   var server = http.createServer(app);

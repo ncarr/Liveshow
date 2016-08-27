@@ -14,8 +14,6 @@ var doc = connection.get('liveshow', 'home');
 
 // Get initial value of document and subscribe to changes
 doc.subscribe(function () {
-  renderSlideList(doc.data.content.slides);
-
   function renderSlide(index) {
     var slidewrapper = $(".main-slides > .slide-wrapper:first").clone();
     $(".main-slides").empty();
@@ -36,20 +34,11 @@ doc.subscribe(function () {
       }
       slidewrapper.appendTo($(".main-slides"));
     }
-    updateSlideColour("primary", doc.data.background);
-    updateSlideColour("accent", doc.data.accent);
-    updateSlideColour("text", doc.data.foreground);
 
-    function uploadSlideTitle(display, slide, content) {
-      doc.submitOp([{p: ["content", "slides", display, slide, "content", 0, "content"], od: doc.data.content.slides[display][slide].content[0].content,  oi: content}]);
-    }
     $(".main-slides .mdl-card__title-text").blur(function() {
       uploadSlideTitle($(this).parents(".slide").data("display"), $(this).parents(".slide").data("slide"), $(this).val());
     });
 
-    function uploadSlideContent(display, slide, pos, content) {
-      doc.submitOp([{p: ["content", "slides", display, slide, "content", pos, "content"], od: doc.data.content.slides[display][slide].content[pos].content,  oi: content}]);
-    }
     $(".main-slides .mdl-card__supporting-text").blur(function() {
       uploadSlideContent($(this).parents(".slide").data("display"), $(this).parents(".slide").data("slide"), ($(this).parents(".slide").hasClass("speaker") ? 3 : 1), $(this).val());
     });
@@ -57,7 +46,16 @@ doc.subscribe(function () {
       uploadSlideContent($(this).parents(".slide").data("display"), $(this).parents(".slide").data("slide"), $(this).index(), $(this).val());
     });
   }
-  renderSlide(0);
+  global.renderSlide = renderSlide
+
+  function uploadSlideTitle(display, slide, content) {
+    doc.submitOp([{p: ["content", "slides", display, slide, "content", 0, "content"], od: doc.data.content.slides[display][slide].content[0].content,  oi: content}]);
+  }
+  global.uploadSlideTitle = uploadSlideTitle;
+  function uploadSlideContent(display, slide, pos, content) {
+    doc.submitOp([{p: ["content", "slides", display, slide, "content", pos, "content"], od: doc.data.content.slides[display][slide].content[pos].content,  oi: content}]);
+  }
+  global.uploadSlideContent = uploadSlideContent;
 
   function pushTitle() {
     doc.submitOp([{p: ["title"], od: doc.data.title,  oi: $("#title").val()}]);
