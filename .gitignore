@@ -36,6 +36,9 @@ jspm_packages
 # Compiled Browserify code
 public/bundle.js
 
+# Environment variables
+.env
+
 # =========================
 # Operating System Files
 # =========================
