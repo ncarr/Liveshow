@@ -1,32 +1,107 @@
+var http = require('http');
 var express = require('express');
-var sharejs = require('share');
-var app = express();
+var ShareDB = require('sharedb');
+var WebSocket = require('ws');
+var WebSocketJSONStream = require('websocket-json-stream');
 
-// set the view engine to ejs
-app.set('view engine', 'ejs');
+var db = require('sharedb-mongo')(process.env.DB || "mongodb://localhost:27017/liveshow");
+var backend = new ShareDB({db: db});
 
-// public folder to store assets
-app.use(express.static(__dirname + '/public'));
-
-// routes for app
-app.get('/', function(req, res) {
-  res.render('edit', {
-    name: "Untitled document"
-  });
+var connection = backend.connect();
+var doc = connection.get('liveshow', 'home');
+doc.fetch(function(err) {
+  if (err) throw err;
+  if (doc.type === null) {
+    doc.create({
+      "title": "",
+      "id": "0",
+      "presentations": {},
+      "background": "#00bcd4",
+      "foreground": "#000000",
+      "accent": "#ff4081",
+      "accent-foreground": "#ffffff",
+      "content":
+      {
+        "slides":
+        [
+          [
+            {
+              "style": "presentation-title",
+              "content":
+              [
+                {
+                  "style": "title",
+                  "content": "Add a title"
+                }
+              ]
+            },
+            {
+              "style": "speaker",
+              "content":
+              [
+                {
+                  "style": "title",
+                  "content": "John Doe"
+                },
+                {
+                  "style": "subheading",
+                  "content": "@example"
+                },
+                {
+                  "style": "subheading",
+                  "content": "Job Title"
+                },
+                {
+                  "style": "supporting-text",
+                  "content": "Add a short bio"
+                }
+              ]
+            },
+            {
+              "style": "content",
+              "content":
+              [
+                {
+                  "style": "title",
+                  "content": "Add a title"
+                },
+                {
+                  "style": "supporting-text",
+                  "content": "Add some content"
+                }
+              ]
+            }
+          ]
+        ]
+      }
+    }, startServer);
+    return;
+  }
+  startServer();
 });
 
-require('redis');
+function startServer() {
+  // Create a web server to serve files and listen to WebSocket connections
+  var app = express();
+  app.set('view engine', 'ejs');
+  app.use(express.static('public'));
+  app.get('/', function(req, res) {
+    doc.fetch(function (err) {
+      if (err) throw err;
+      res.render('edit', {
+        data: doc.data
+      });
+    });
+  });
+  var server = http.createServer(app);
 
-// options for sharejs
-var options = {
-  db: {type: 'none'},
-  browserChannel: null,
-  websocket: {}
-};
+  // Connect any incoming WebSocket connection to ShareDB
+  var wss = new WebSocket.Server({server: server});
+  wss.on('connection', function(ws, req) {
+    var stream = new WebSocketJSONStream(ws);
+    backend.listen(stream);
+  });
 
-// attach the express server to sharejs
-server = sharejs.server.attach(app, options);
-
-// listen on port 8000 (for localhost) or the port defined for heroku
-var port = process.env.PORT || 8000;
-server.listen(port);
+  var port = process.env.PORT || 8000;
+  server.listen(port);
+}

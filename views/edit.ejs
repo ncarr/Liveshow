@@ -1,3 +1,15 @@
+<%
+function escapeHtml(text) {
+  var map = {
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#039;'
+  };
+  return text.replace(/[&<>"']/g, function(m) { return map[m]; });
+}
+%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -13,6 +25,15 @@
     <link rel="stylesheet" href="mdl-speed-dial.css">
     <link href='https://fonts.googleapis.com/css?family=Roboto:300,400,500,700' rel='stylesheet' type='text/css'>
     <script defer src="https://code.getmdl.io/1.1.3/material.min.js"></script>
+    <style>
+      .mdl-button--fab.mdl-button--colored.mdl-js-button {
+        background-color: <%= data.content.slides[0][0].accent || data.accent; %>;
+      }
+      main .slide {
+        background-color: <%= data.content.slides[0][0].background || data.background; %>;
+        color: <%= data.content.slides[0][0].foreground || data.foreground; %>;
+      }
+    </style>
 </head>
 
 <body class="container-fluid">
@@ -22,7 +43,7 @@
           <i class="material-icons">view_module</i>
         </div>
         <div class="mdl-layout__header-row">
-          <input type="text" class="mdl-layout-title" id="title" value="<%= name %>" placeholder="Untitled document" />
+          <input type="text" class="mdl-layout-title" id="title" value="<%= data.title %>" placeholder="Untitled document" />
           <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect present" style="margin-left: 10px;"><i class="material-icons">ondemand_video</i> Present</button>
           <button class="mdl-button mdl-js-button mdl-button--icon present" style="margin-left: 10px;">
             <i class="material-icons">ondemand_video</i>
@@ -80,26 +101,46 @@
           <i class="mdl-layout-icon material-icons" style="margin-right: 10px;">desktop_windows</i>
           <span class="mdl-layout-title">Liveshow</span>
         </div>
-        <nav class="mdl-navigation"></nav>
+        <nav class="mdl-navigation">
+          <% for (var i = 0; i < data.content.slides[0].length; i++) { %>
+            <a class="mdl-navigation__link" onclick="renderSlide(<%= i; %>)" href="#">Slide <%= (i + 1).toString(); %></a>
+          <% } %>
+        </nav>
       </div>
       <main class="mdl-layout__content">
         <div class="page-content mdl-grid">
           <div class="mdl-grid mdl-grid--no-spacing mdl-cell--9-col main-slides" style="display: block;">
+            <% for (var i = 0; i < data.content.slides.length; i++) { %>
             <div class="slide-wrapper">
-              <span class="pagenum mdl-cell--12-col">Display 1</span>
+              <span class="pagenum mdl-cell--12-col">Display <%= (i + 1).toString(); %></span>
               <div class="aspect">
                 <div class="stretch">
-                  <div class="mdl-card mdl-shadow--2dp slide"></div>
+                  <div class="mdl-card mdl-shadow--2dp slide <%= data.content.slides[i][0].style; %>" data-slide="0" data-display="<%= i; %>">
+                  <% for (var j = 0; j < data.content.slides[i][0].content.length; j++) {
+                    if (data.content.slides[i][0].content[j].style == "title") { %>
+                    <div class="mdl-card__title mdl-card--expand<% if (data.content.slides[i][0].content.length > j + 1 && data.content.slides[i][0].content[j + 1].style == "subheading") { %> subheading<% } %>">
+                      <textarea rows="1" class="mdl-card__title-text" placeholder="Add a title" onblur="uploadSlideTitle(<%= i; %>, 0, this.value);"><%= escapeHtml(data.content.slides[i][0].content[j].content); %></textarea>
+                      <% while (data.content.slides[i][0].content.length > j + 1 && data.content.slides[i][0].content[j + 1].style == "subheading") {
+                        j++; %>
+                      <textarea rows="1" class="subheading" onblur="uploadSlideContent(<%= i; %>, 0, <%= j; %>, this.value);"><%= escapeHtml(data.content.slides[i][0].content[j]["content"]); %></textarea>
+                      <% } %>
+                    </div>
+                    <% } else { %>
+                    <textarea class="mdl-card__supporting-text" onblur="uploadSlideContent(<%= i; %>, 0, <%= j; %>, this.value);"><%= escapeHtml(slide.content[j]["content"]) %></textarea>
+                    <% }
+                  } %>
+                  </div>
                 </div>
               </div>
             </div>
+            <% } %>
           </div>
           <div class="mdl-cell mdl-shadow--2dp mdl-cell--3-col mdl-cell--12-col-phone mdl-cell--12-col-tablet mdl-card">
             <div class="mdl-card__supporting-text mdl-grid designs">
               <h4 class="mdl-cell mdl-cell--12-col">Designs</h4>
               <div class="colours">
                 Colours:
-                <button id="primary-colour-menu" class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-js-ripple-effect mdl-button--colored"></button>
+                <button id="primary-colour-menu" class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-js-ripple-effect mdl-button--colored" style="background-color: <%= data.content.slides[0][0].background || data.background; %>;"></button>
                 <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect primary-colour-list" for="primary-colour-menu">
                   <li disabled class="mdl-menu__item">Primary colour:</li>
                   <li class="mdl-menu__item"><button class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-js-ripple-effect mdl-button--colored mdl-color--red-500"></button></li>
@@ -123,7 +164,7 @@
                   <li class="mdl-menu__item"><button class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-js-ripple-effect mdl-button--colored mdl-color--black"></button></li>
                   <li class="mdl-menu__item"><button class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-js-ripple-effect mdl-button--colored mdl-color--white"></button></li>
                 </ul>
-                <button id="accent-colour-menu" class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-js-ripple-effect mdl-button--colored"></button>
+                <button id="accent-colour-menu" class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-js-ripple-effect mdl-button--colored" style="background-color: <%= data.content.slides[0][0].accent || data.accent; %>;"></button>
                 <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect accent-colour-list" for="accent-colour-menu">
                   <li disabled class="mdl-menu__item">Accent colour:</li>
                   <li class="mdl-menu__item"><button class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-js-ripple-effect mdl-button--colored mdl-color--red-A200"></button></li>
@@ -142,7 +183,7 @@
                   <li class="mdl-menu__item"><button class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-js-ripple-effect mdl-button--colored mdl-color--orange-A200"></button></li>
                   <li class="mdl-menu__item"><button class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-js-ripple-effect mdl-button--colored mdl-color--deep-orange-A200"></button></li>
                 </ul>
-                <button id="text-colour-menu" class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-js-ripple-effect mdl-button--colored"></button>
+                <button id="text-colour-menu" class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-js-ripple-effect mdl-button--colored" style="background-color: <%= data.content.slides[0][0].foreground || data.foreground; %>;"></button>
                 <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect text-colour-list" for="text-colour-menu">
                   <li disabled class="mdl-menu__item">Text colour:</li>
                   <li class="mdl-menu__item"><button class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-js-ripple-effect mdl-button--colored mdl-color--black"></button></li>
@@ -190,12 +231,10 @@
       </main>
     </div>
 
-    <script src="/share/share.uncompressed.js"></script>
-    <script src="/share/json.uncompressed.js"></script>
     <script src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
-    <script src="script.js"></script>
+    <script src="jquery.auto-grow-input.min.js"></script>
+    <script src="bundle.js"></script>
     <script src="mdl-speed-dial.js"></script>
     <script src="stretchy.js" data-filter="textarea"></script>
-    <script src="jquery.auto-grow-input.min.js"></script>
 </body>
 </html>
