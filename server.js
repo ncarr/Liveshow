@@ -4,8 +4,15 @@ var ShareDB = require('sharedb');
 var WebSocket = require('ws');
 var WebSocketJSONStream = require('websocket-json-stream');
 
-var db = require('sharedb-mongo')(process.env.DB || "mongodb://localhost:27017/liveshow");
-var backend = new ShareDB({db: db});
+if (process.env.DB) {
+  // for production
+  var db = require('sharedb-mongo')(process.env.DB);
+  var backend = new ShareDB({db: db});
+} else {
+  // for testing
+  var backend = new ShareDB();
+}
+
 
 var connection = backend.connect();
 var doc = connection.get('liveshow', 'home');

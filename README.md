@@ -10,7 +10,7 @@ A real-time collaborative presenter view and presentation editor. Currently in d
   [Redis](http://redis.io)  
   [Redis for Windows](https://github.com/MSOpenTech/redis)
 2. `npm install` will install Liveshow and build the client side JS from source.
-3. Set the `DB` environment variable to a MongoDB URL unless it is at `mongodb://localhost:27017/liveshow`
+3. For production, set the `DB` environment variable to a MongoDB URL (for example `mongodb://localhost:27017/liveshow`). You can leave this out for testing, although all data will be wiped when you restart the server.
 
 ## Running the server
 
