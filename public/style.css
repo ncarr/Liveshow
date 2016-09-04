@@ -67,6 +67,9 @@ button.mdl-button--icon.present {
 .main-slides .slide.presentation-title .mdl-card__title-text {
   text-align: center;
 }
+.slide.selected {
+  border: 2px solid rgba(0, 0, 0, 0.54);
+}
 @media only screen and (max-width: 485px) {
     button.mdl-button--raised.present {
         display: none;

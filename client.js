@@ -13,7 +13,14 @@ var connection = new sharedb.Connection(socket);
 var doc = connection.get('liveshow', 'home');
 
 // Get initial value of document and subscribe to changes
-doc.subscribe();
+doc.subscribe(function () {
+  $(".main-slides .slide").click(function (e) {
+    if (!$(this).hasClass("selected")) {
+      $(".main-slides .slide").removeClass("selected");
+      $(this).addClass("selected");
+    }
+  });
+});
 // When document changes (by this client or any other, or the server)
 doc.on('op', callback);
 
@@ -92,7 +99,7 @@ function renderSlide(index) {
       $(".pagenum", slidewrapper).html("Display " + (i + 1).toString());
       slide = doc.data.content.slides[i][index];
       $(".stretch", slidewrapper).empty();
-      $('<div class="mdl-card mdl-shadow--2dp slide" data-slide="' + index + '" data-display="' + i + '"></div>').addClass(slide.style).appendTo($(".stretch", slidewrapper));
+      $('<div class="mdl-card mdl-shadow--2dp slide' + ((i == 0) ? " selected" : "") + '" data-slide="' + index + '" data-display="' + i + '"></div>').addClass(slide.style).appendTo($(".stretch", slidewrapper));
       for (var j = 0; j < slide.content.length; j++) {
         if (slide.content[j]["style"] == "title") {
           slidewrapper.find(".slide").append('<div class="mdl-card__title mdl-card--expand"><textarea rows="1" class="mdl-card__title-text" placeholder="Add a title">' + escapeHtml(slide.content[j]["content"]) + '</textarea></div>');
@@ -120,6 +127,10 @@ function renderSlide(index) {
     });
     $(".main-slides .subheading").blur(function() {
       uploadSlideContent($(this).parents(".slide").data("display"), $(this).parents(".slide").data("slide"), $(this).index(), $(this).val());
+    });
+    $(".main-slides .slide").click(function (e) {
+      $(".main-slides .slide").removeClass("selected");
+      $(this).addClass("selected");
     });
   });
 }
@@ -256,6 +267,48 @@ $("#global-colours").change(function(e) {
       }
     }
   });
+});
+
+$(".designs .slide").click(function () {
+  if (!$(this).hasClass("selected")) {
+    target = this;
+    classes = $(".main-slides .slide.selected").attr('class').split(' ');
+    $(".main-slides .slide.selected").removeClass(classes[classes.length - 2] + " " + classes[classes.length - 1]).addClass($(target).attr('class').split(' ').pop() + " selected");
+    $(".designs .slide").removeClass("selected");
+    doc.fetch(function (err) {
+      if (err) throw err;
+      display = $(".main-slides .slide.selected").data("display");
+      slide = $(".main-slides .slide.selected").data("slide");
+      if ($("h6.flush", target).length && !$(".main-slides .slide.selected textarea.subheading").length) {
+        $(".main-slides .slide.selected .mdl-card__title").append('<textarea rows="1" class="subheading" placeholder="@example"></textarea><textarea rows="1" class="subheading" placeholder="Job Title Creator"></textarea>');
+        doc.submitOp([{p: ["content", "slides", display, slide, "content", 1], li: {style: "subheading", content: ""}}, {p: ["content", "slides", display, slide, "content", 2], li: {style: "subheading", content: ""}}]);
+        $(".main-slides .slide.selected .mdl-card__title .subheading:first-child").blur(function () {
+          uploadSlideContent(display, slide, 1, this.value);
+        });
+        $(".main-slides .slide.selected .mdl-card__title .subheading:nth-child(2)").blur(function () {
+          uploadSlideContent(display, slide, 2, this.value);
+        });
+      }
+      if (!$("h6.flush", target).length && $(".main-slides .slide.selected textarea.subheading").length) {
+        $(".main-slides .slide.selected .mdl-card__title textarea.subheading").remove();
+        doc.submitOp([{p: ["content", "slides", display, slide, "content", 1], ld: doc.data.content.slides[display][slide].content[1], li: doc.data.content.slides[display][slide].content[3]}, {p: ["content", "slides", display, slide, "content", 2], ld: doc.data.content.slides[display][slide].content[2]}, {p: ["content", "slides", display, slide, "content", 3], ld: doc.data.content.slides[display][slide].content[3]}]);
+        doc.submitOp([{p: ["content", "slides", display, slide, "content", 1], ld: doc.data.content.slides[display][slide].content[1]}]);
+      }
+      if ($(".mdl-card__supporting-text", target).length && !$(".main-slides .slide.selected .mdl-card__supporting-text").length) {
+        $(".main-slides .slide.selected").append('<textarea class="mdl-card__supporting-text" placeholder="Add some content"></textarea>');
+        doc.submitOp([{p: ["content", "slides", display, slide, "content", ($(target).hasClass("speaker") ? 3 : 1)], li: {style: "supporting-text", content: ""}}]);
+        $(".main-slides .slide.selected .mdl-card__supporting-text").blur(function () {
+          uploadSlideContent(display, slide, ($(target).hasClass("speaker") ? 3 : 1), this.value);
+        });
+      }
+      if (!$(".mdl-card__supporting-text", target).length && $(".main-slides .slide.selected .mdl-card__supporting-text").length) {
+        $(".main-slides .slide.selected .mdl-card__supporting-text").remove();
+        doc.submitOp([{p: ["content", "slides", display, slide, "content", ($(target).hasClass("speaker") ? 3 : 1)], ld: doc.data.content.slides[display][slide].content[($(target).hasClass("speaker") ? 3 : 1)]}]);
+      }
+      doc.submitOp([{p: ["content", "slides", display, slide, "style"], od: doc.data.content.slides[display][slide].style, oi: $(target).attr('class').split(' ').pop()}]);
+      $(target).addClass("selected");
+    });
+  }
 });
 
 $("#title").autoGrowInput();
