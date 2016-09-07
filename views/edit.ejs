@@ -103,8 +103,9 @@ function escapeHtml(text) {
         </div>
         <nav class="mdl-navigation">
           <% for (var i = 0; i < data.content.slides[0].length; i++) { %>
-            <a class="mdl-navigation__link" onclick="renderSlide(<%= i; %>)" href="#">Slide <%= (i + 1).toString(); %></a>
+          <a class="mdl-navigation__link" onclick="renderSlide(<%= i; %>)" href="#">Slide <%= (i + 1).toString(); %></a>
           <% } %>
+          <a class="mdl-navigation__link edit" href="#">Edit</a>
         </nav>
       </div>
       <main class="mdl-layout__content">

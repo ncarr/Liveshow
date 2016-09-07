@@ -311,4 +311,14 @@ $(".designs .slide").click(function () {
   }
 });
 
+$(".mdl-navigation__link.edit").click(function () {
+  if ($(".mdl-navigation__link.edit").hasClass("is-clicked")) {
+    $(".mdl-navigation__link i.material-icons").remove();
+    $(".mdl-navigation__link.edit").removeClass("is-clicked").html("Edit");
+  } else {
+    $(".mdl-navigation__link").not(".edit").prepend('<i class="material-icons">close</i> ');
+    $(".mdl-navigation__link.edit").addClass("is-clicked").html("Done");
+  }
+});
+
 $("#title").autoGrowInput();

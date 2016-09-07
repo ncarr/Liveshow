@@ -70,6 +70,9 @@ button.mdl-button--icon.present {
 .slide.selected {
   border: 2px solid rgba(0, 0, 0, 0.54);
 }
+.mdl-layout__drawer .mdl-navigation .mdl-navigation__link.edit {
+  color: rgba(0, 0, 0, 0.38);
+}
 @media only screen and (max-width: 485px) {
     button.mdl-button--raised.present {
         display: none;
