@@ -1,23 +1,57 @@
 # Liveshow
 
-A real-time collaborative presenter view and presentation editor. Currently in development. Editor mostly functional.
+> A real-time collaborative presenter view and presentation editor
 
+## About
 
+This project uses [Feathers](http://feathersjs.com). An open source web framework for building modern real-time applications.
 
-## Installation
+## Getting Started
 
-1. Install Redis  
-  [Redis](http://redis.io)  
-  [Redis for Windows](https://github.com/MSOpenTech/redis)
-2. `npm install` will install Liveshow and build the client side JS from source.
-3. For production, set the `DB` environment variable to a MongoDB URL (for example `mongodb://localhost:27017/liveshow`). You can leave this out for testing, although all data will be wiped when you restart the server.
+Getting up and running is as easy as 1, 2, 3.
 
-## Running the server
+1. Make sure you have [NodeJS](https://nodejs.org/) and [npm](https://www.npmjs.com/) installed.
+2. Install your dependencies
+    
+    ```
+    cd path/to/Liveshow; npm install
+    ```
 
-`npm start`
+3. Start your app
+    
+    ```
+    npm start
+    ```
 
-Liveshow will be hosted at `localhost:8000` unless your `PORT` environment variable states otherwise.
+## Testing
 
-## Building from source
+Simply run `npm test` and all your tests in the `test/` directory will be run.
 
-On installation everything should be built for you, but if you make edits to client.js you will need to `npm run build` to expose your changes to the browser.
+## Scaffolding
+
+Feathers has a powerful command line interface. Here are a few things it can do:
+
+```
+$ npm install -g feathers-cli             # Install Feathers CLI
+
+$ feathers generate service               # Generate a new Service
+$ feathers generate hook                  # Generate a new Hook
+$ feathers generate model                 # Generate a new Model
+$ feathers help                           # Show all commands
+```
+
+## Help
+
+For more information on all the things you can do with Feathers visit [docs.feathersjs.com](http://docs.feathersjs.com).
+
+## Changelog
+
+__0.1.0__
+
+- Initial release
+
+## License
+
+Copyright (c) 2016
+
+Licensed under the [MIT license](LICENSE).

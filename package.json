@@ -1,38 +1,58 @@
 {
-  "name": "Liveshow",
-  "version": "1.0.0",
-  "repository": {
-    "type": "git",
-    "url": "git@github.com:ncarr/Liveshow.git"
-  },
+  "name": "liveshow",
   "description": "A real-time collaborative presenter view and presentation editor",
-  "main": "server.js",
+  "version": "0.0.0",
+  "homepage": "",
+  "main": "src/",
+  "keywords": [
+    "feathers"
+  ],
+  "license": "MIT",
+  "repository": {},
+  "author": {},
+  "contributors": [],
+  "bugs": {},
   "engines": {
-    "node": "4.4.7"
+    "node": ">= 0.12.0"
   },
   "scripts": {
-    "install": "./node_modules/.bin/browserify client.js -o public/bundle.js",
-    "build": "./node_modules/.bin/browserify client.js -o public/bundle.js",
-    "start": "node server.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "npm run jshint && npm run mocha",
+    "jshint": "jshint src/. test/. --config",
+    "start": "node src/",
+    "build": "webpack",
+    "mocha": "mocha test/ --recursive"
   },
-  "keywords": [
-    "collaborative",
-    "realtime",
-    "sharedb",
-    "liveshow",
-    "presentation"
-  ],
-  "author": "Nicholas Carr",
-  "license": "ISC",
   "dependencies": {
-    "browserify": "^13.1.0",
-    "ejs": "^2.5.1",
-    "express": "^4.14.0",
-    "redis": "^2.6.2",
-    "sharedb": "^1.0.0-beta.5",
-    "sharedb-mongo": "^1.0.0-beta.2",
-    "websocket-json-stream": "0.0.3",
-    "ws": "^1.1.1"
+    "babel-core": "^6.24.1",
+    "babel-loader": "^6.4.1",
+    "babel-preset-latest": "^6.24.1",
+    "body-parser": "^1.16.1",
+    "compression": "^1.6.2",
+    "cors": "^2.8.1",
+    "css-loader": "^0.28.0",
+    "feathers": "^2.0.3",
+    "feathers-authentication": "^0.7.12",
+    "feathers-authentication-client": "^0.3.1",
+    "feathers-commons": "^0.8.7",
+    "feathers-configuration": "^0.3.3",
+    "feathers-errors": "^2.5.0",
+    "feathers-hooks": "^1.7.1",
+    "feathers-nedb": "^2.6.2",
+    "feathers-rest": "^1.6.0",
+    "feathers-socketio": "^1.4.3",
+    "nedb": "^1.8.0",
+    "passport": "^0.3.2",
+    "serve-favicon": "^2.4.1",
+    "vue": "^2.2.6",
+    "vue-feathers-sync": "^0.2.2",
+    "vue-loader": "^11.3.4",
+    "vue-template-compiler": "^2.2.6",
+    "webpack": "^2.4.1",
+    "winston": "^2.3.1"
+  },
+  "devDependencies": {
+    "jshint": "^2.9.4",
+    "mocha": "^3.2.0",
+    "request": "^2.79.0"
   }
 }

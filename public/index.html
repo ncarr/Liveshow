@@ -1,59 +1,41 @@
-<%
-function escapeHtml(text) {
-  var map = {
-    '&': '&amp;',
-    '<': '&lt;',
-    '>': '&gt;',
-    '"': '&quot;',
-    "'": '&#039;'
-  };
-  return text.replace(/[&<>"']/g, function(m) { return map[m]; });
-}
-%>
-<!DOCTYPE html>
 <html>
+
 <head>
-    <title>Liveshow Editor</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="theme-color" content="#ffffff">
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <link rel="manifest" href="manifest.json">
-    <link href="style.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-    <link rel="stylesheet" href="https://code.getmdl.io/1.1.3/material.indigo-pink.min.css">
-    <link rel="stylesheet" href="mdl-speed-dial.css">
-    <link href='https://fonts.googleapis.com/css?family=Roboto:300,400,500,700' rel='stylesheet' type='text/css'>
-    <script defer src="https://code.getmdl.io/1.1.3/material.min.js"></script>
-    <style>
-      .mdl-button--fab.mdl-button--colored.mdl-js-button {
-        background-color: <%= data.content.slides[0][0].accent || data.accent; %>;
-      }
-      main .slide {
-        background-color: <%= data.content.slides[0][0].background || data.background; %>;
-        color: <%= data.content.slides[0][0].foreground || data.foreground; %>;
-      }
-    </style>
+  <title>Liveshow Editor</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#ffffff">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <link rel="manifest" href="manifest.json">
+  <link href="style.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+  <link rel="stylesheet" href="https://code.getmdl.io/1.1.3/material.indigo-pink.min.css">
+  <link rel="stylesheet" href="mdl-speed-dial.css">
+  <link href='https://fonts.googleapis.com/css?family=Roboto:300,400,500,700' rel='stylesheet' type='text/css'>
+  <script defer src="https://code.getmdl.io/1.1.3/material.min.js"></script>
 </head>
 
-<body class="container-fluid">
+<body>
+  <div id="app" class="container-fluid">
     <div class="mdl-layout mdl-js-layout mdl-layout--fixed-drawer mdl-layout--fixed-header">
       <header class="mdl-layout__header mdl-color--white mdl-color-text--grey-600">
         <div aria-expanded="false" role="button" tabindex="0" class="mdl-layout__drawer-button mdl-layout--small-screen-only mdl-color-text--grey-600">
           <i class="material-icons">view_module</i>
         </div>
         <div class="mdl-layout__header-row">
-          <input type="text" class="mdl-layout-title" id="title" value="<%= data.title %>" placeholder="Untitled document" />
-          <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect present" style="margin-left: 10px;"><i class="material-icons">ondemand_video</i> Present</button>
-          <button class="mdl-button mdl-js-button mdl-button--icon present" style="margin-left: 10px;">
-            <i class="material-icons">ondemand_video</i>
-          </button>
+          <input type="text" class="mdl-layout-title" id="title" v-model="presentation.title" placeholder="Untitled document" />
+          <a href="present">
+            <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect present" style="margin-left: 10px;"><i class="material-icons">ondemand_video</i> Present</button>
+            <button class="mdl-button mdl-js-button mdl-button--icon present" style="margin-left: 10px;">
+                  <i class="material-icons">ondemand_video</i>
+                </button>
+          </a>
           <div class="mdl-layout-spacer"></div>
 
           <div class="mdl-speed-dial mdl-speed-dial--header-edge">
             <button class="mdl-speed-dial__main-fab mdl-speed-dial__main-fab--spin mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored">
-              <i class="material-icons mdl-speed-dial_main-fab-icon">add</i>
-            </button>
+                  <i class="material-icons mdl-speed-dial_main-fab-icon">add</i>
+                </button>
 
             <div class="mdl-speed-dial__options">
               <div class="mdl-speed-dial__option">
@@ -102,46 +84,25 @@ function escapeHtml(text) {
           <span class="mdl-layout-title">Liveshow</span>
         </div>
         <nav class="mdl-navigation">
-          <% for (var i = 0; i < data.content.slides[0].length; i++) { %>
-          <a class="mdl-navigation__link" onclick="renderSlide(<%= i; %>)" href="#">Slide <%= (i + 1).toString(); %></a>
-          <% } %>
-          <a class="mdl-navigation__link edit" href="#">Edit</a>
+          <a class="mdl-navigation__link" href="#" v-for="(slide, i) in presentation.slides" :key="i" @click="currentSlide = i">Slide {{ (i + 1).toString() }}</a>
+          <a class="mdl-navigation__link edit" v-if="presentation.slides.length > 1" href="#">Edit</a>
         </nav>
       </div>
       <main class="mdl-layout__content">
         <div class="page-content mdl-grid">
           <div class="mdl-grid mdl-grid--no-spacing mdl-cell--9-col main-slides" style="display: block;">
-            <% for (var i = 0; i < data.content.slides.length; i++) { %>
-            <div class="slide-wrapper">
-              <span class="pagenum mdl-cell--12-col">Display <%= (i + 1).toString(); %></span>
-              <div class="aspect">
-                <div class="stretch">
-                  <div class="mdl-card mdl-shadow--2dp slide <%= data.content.slides[i][0].style; %><% if (i == 0) { %> selected<% } %>" data-slide="0" data-display="<%= i; %>">
-                  <% for (var j = 0; j < data.content.slides[i][0].content.length; j++) {
-                    if (data.content.slides[i][0].content[j].style == "title") { %>
-                    <div class="mdl-card__title mdl-card--expand<% if (data.content.slides[i][0].content.length > j + 1 && data.content.slides[i][0].content[j + 1].style == "subheading") { %> subheading<% } %>">
-                      <textarea rows="1" class="mdl-card__title-text" placeholder="Add a title" onblur="uploadSlideTitle(<%= i; %>, 0, this.value);"><%= escapeHtml(data.content.slides[i][0].content[j].content); %></textarea>
-                      <% while (data.content.slides[i][0].content.length > j + 1 && data.content.slides[i][0].content[j + 1].style == "subheading") {
-                        j++; %>
-                      <textarea rows="1" class="subheading" onblur="uploadSlideContent(<%= i; %>, 0, <%= j; %>, this.value);"><%= escapeHtml(data.content.slides[i][0].content[j]["content"]); %></textarea>
-                      <% } %>
-                    </div>
-                    <% } else { %>
-                    <textarea class="mdl-card__supporting-text" onblur="uploadSlideContent(<%= i; %>, 0, <%= j; %>, this.value);"><%= escapeHtml(data.content.slides[i][0].content[j]["content"]) %></textarea>
-                    <% }
-                  } %>
-                  </div>
-                </div>
-              </div>
+            <div class="slide-wrapper" v-for="(slide, i) in presentation.slides[currentSlide]" :key="i">
+              <span class="pagenum mdl-cell--12-col">Display {{ (i + 1).toString() }}</span>
+              <liveshow-slide :id="slide" :class="(i == 0) ? '': 'selected'"></liveshow-slide>
             </div>
-            <% } %>
           </div>
           <div class="mdl-cell mdl-shadow--2dp mdl-cell--3-col mdl-cell--12-col-phone mdl-cell--12-col-tablet mdl-card">
             <div class="mdl-card__supporting-text mdl-grid designs">
               <h4 class="mdl-cell mdl-cell--12-col">Designs</h4>
               <div class="colours">
                 Colours:
-                <button id="primary-colour-menu" class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-js-ripple-effect mdl-button--colored" style="background-color: <%= data.content.slides[0][0].background || data.background; %>;"></button>
+                <button id="primary-colour-menu" class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-js-ripple-effect mdl-button--colored"
+                  v-bind:style="{ 'background-color': presentation.slides[currentSlide][0].background || presentation.background }"></button>
                 <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect primary-colour-list" for="primary-colour-menu">
                   <li disabled class="mdl-menu__item">Primary colour:</li>
                   <li class="mdl-menu__item"><button class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-js-ripple-effect mdl-button--colored mdl-color--red-500"></button></li>
@@ -165,7 +126,8 @@ function escapeHtml(text) {
                   <li class="mdl-menu__item"><button class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-js-ripple-effect mdl-button--colored mdl-color--black"></button></li>
                   <li class="mdl-menu__item"><button class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-js-ripple-effect mdl-button--colored mdl-color--white"></button></li>
                 </ul>
-                <button id="accent-colour-menu" class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-js-ripple-effect mdl-button--colored" style="background-color: <%= data.content.slides[0][0].accent || data.accent; %>;"></button>
+                <button id="accent-colour-menu" class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-js-ripple-effect mdl-button--colored"
+                  v-bind:style="{ 'background-color': presentation.slides[currentSlide][0].accent || presentation.accent }"></button>
                 <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect accent-colour-list" for="accent-colour-menu">
                   <li disabled class="mdl-menu__item">Accent colour:</li>
                   <li class="mdl-menu__item"><button class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-js-ripple-effect mdl-button--colored mdl-color--red-A200"></button></li>
@@ -184,18 +146,19 @@ function escapeHtml(text) {
                   <li class="mdl-menu__item"><button class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-js-ripple-effect mdl-button--colored mdl-color--orange-A200"></button></li>
                   <li class="mdl-menu__item"><button class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-js-ripple-effect mdl-button--colored mdl-color--deep-orange-A200"></button></li>
                 </ul>
-                <button id="text-colour-menu" class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-js-ripple-effect mdl-button--colored" style="background-color: <%= data.content.slides[0][0].foreground || data.foreground; %>;"></button>
+                <button id="text-colour-menu" class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-js-ripple-effect mdl-button--colored"
+                  v-bind:style="{ 'background-color': presentation.slides[currentSlide][0].foreground || presentation.foreground }"></button>
                 <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect text-colour-list" for="text-colour-menu">
                   <li disabled class="mdl-menu__item">Text colour:</li>
                   <li class="mdl-menu__item"><button class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-js-ripple-effect mdl-button--colored mdl-color--black"></button></li>
                   <li class="mdl-menu__item"><button class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-js-ripple-effect mdl-button--colored mdl-color--white"></button></li>
                 </ul>
                 <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" for="global-colours" id="global-colours-label">
-                  <input type="checkbox" id="global-colours" class="mdl-switch__input" <% if (data.content.slides[0][0]["background"] === undefined) { %>checked<% } %>>
-                  <span class="mdl-switch__label">Presentation-wide colours</span>
-                </label>
+                      <input type="checkbox" id="global-colours" class="mdl-switch__input" v-bind:checked="presentation.slides[currentSlide][0]['background'] === undefined" />
+                      <span class="mdl-switch__label">Presentation-wide colours</span>
+                    </label>
               </div>
-              <div class="mdl-shadow--2dp mdl-card slide content<% if (data.content.slides[0][0].style == "content") { %> selected<% } %>">
+              <div class="mdl-shadow--2dp mdl-card slide content" v-bind:class="(presentation.slides[currentSlide][0].style == 'content') ? 'selected': ''">
                 <div class="mdl-card__title mdl-card--expand">
                   <h2 class="mdl-card__title-text">Title</h2>
                 </div>
@@ -203,7 +166,7 @@ function escapeHtml(text) {
                   This is content.
                 </div>
               </div>
-              <div class="mdl-shadow--2dp mdl-card slide speaker<% if (data.content.slides[0][0].style == "speaker") { %> selected<% } %>">
+              <div class="mdl-shadow--2dp mdl-card slide speaker" v-bind:class="(presentation.slides[currentSlide][0].style == 'speaker') ? 'selected': ''">
                 <div class="mdl-card__title">
                   <h2 class="mdl-card__title-text">John Doe</h2>
                   <h6 class="flush">@example</h6>
@@ -213,12 +176,12 @@ function escapeHtml(text) {
                   This is the shortest bio you have ever seen.
                 </div>
               </div>
-              <div class="mdl-shadow--2dp mdl-card slide presentation-title<% if (data.content.slides[0][0].style == "presentation-title") { %> selected<% } %>">
+              <div class="mdl-shadow--2dp mdl-card slide presentation-title" v-bind:class="(presentation.slides[currentSlide][0].style == 'presentation-title') ? 'selected': ''">
                 <div class="mdl-card__title mdl-card--expand">
                   <h2 class="mdl-card__title-text">Title</h2>
                 </div>
               </div>
-              <div class="mdl-shadow--2dp mdl-card slide content-top<% if (data.content.slides[0][0].style == "content-top") { %> selected<% } %>">
+              <div class="mdl-shadow--2dp mdl-card slide content-top" v-bind:class="(presentation.slides[currentSlide][0].style == 'content-top') ? 'selected': ''">
                 <div class="mdl-card__title">
                   <h4 class="flush">Title</h4>
                 </div>
@@ -231,11 +194,13 @@ function escapeHtml(text) {
         </div>
       </main>
     </div>
+  </div>
 
-    <script src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
-    <script src="jquery.auto-grow-input.min.js"></script>
-    <script src="bundle.js"></script>
-    <script src="mdl-speed-dial.js"></script>
-    <script src="stretchy.js" data-filter="textarea"></script>
+  <script src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
+  <script src="jquery.auto-grow-input.min.js"></script>
+  <script src="mdl-speed-dial.js"></script>
+  <script src="stretchy.js" data-filter="textarea"></script>
+  <script src="./dist/build.js"></script>
 </body>
+
 </html>

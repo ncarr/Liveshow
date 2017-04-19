@@ -67,7 +67,7 @@ button.mdl-button--icon.present {
 .main-slides .slide.presentation-title .mdl-card__title-text {
   text-align: center;
 }
-.slide.selected {
+.selected {
   border: 2px solid rgba(0, 0, 0, 0.54);
 }
 .mdl-layout__drawer .mdl-navigation .mdl-navigation__link.edit {

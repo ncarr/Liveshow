@@ -1,0 +1,12 @@
+{
+  "host": "localhost",
+  "port": 8000,
+  "nedb": "../data/",
+  "public": "../public/",
+  "auth": {
+    "token": {
+      "secret": "REDACTED"
+    },
+    "local": {}
+  }
+}
