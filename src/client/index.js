@@ -25,12 +25,12 @@ Vue.use(VueSyncersFeathers, {
 // Get the Feathers services we want to use
 /*const userService = app.service('users');
 const presentationService = app.service('presentations');*/
-const presentationId = 'ZfZvffSZgRtVuTEH';
+const presentationId = '0';
 var vm = new Vue({
   el: '#app',
   data: {
     currentSlide: 0,
-    presentation: { "title": "", "presentations": {}, "background": "#00bcd4", "foreground": "#000000", "accent": "#ff4081", "accent-foreground": "#ffffff", "slides": [["Jcs7adSPkOFb8qNY"], ["UpyaPGyQkls45SCE"], ["uUg0oTagRLi7oV8O"]], "_id": "ZfZvffSZgRtVuTEH" }
+    presentation: { "title": "", "presentations": {}, "background": "#00bcd4", "foreground": "#ffffff", "accent": "#ff4081", "accent-foreground": "#ffffff", "slides": [["0"]], "_id": "0" }
   },/*
   data: {
     user: {
@@ -98,7 +98,7 @@ var vm = new Vue({
       },
       errored(error) {
         // called when loading is failed
-        console.log("errored")
+        console.log("errored", error)
       }
     }
   }

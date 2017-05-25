@@ -1,20 +1,20 @@
 <template>
   <div v-if="content.type == 'title'" class="mdl-card__title mdl-card--expand" v-bind:class="beforeSubheading ? 'subheading': ''">
-    <textarea rows="1" class="mdl-card__title-text" placeholder="Add a title" v-model="content.content"></textarea>
-    <textarea v-if="content.type == 'subheading'" rows="1" class="subheading" v-model="content.content"></textarea>
+    <textarea rows="1" class="mdl-card__title-text" placeholder="Add a title" v-model="content.content" :style="{color: foreground}"></textarea>
+    <textarea v-if="content.type == 'subheading'" rows="1" class="subheading" v-model="content.content" :style="{color: foreground}"></textarea>
   </div>
   <textarea v-else class="mdl-card__supporting-text" v-model="content.content"></textarea>
 </template>
 
 <script>
   export default {
-    props: ['id', 'beforeSubheading'],
+    props: ['id', 'beforeSubheading', 'foreground', 'accent'],
     data() {
       return {
         content: {
           "type": "title",
           "content": "Add a title",
-          "_id": "gmLeKJRJ7fqaNwAr"
+          "_id": "0"
         }
       }
     },

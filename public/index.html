@@ -93,7 +93,7 @@
           <div class="mdl-grid mdl-grid--no-spacing mdl-cell--9-col main-slides" style="display: block;">
             <div class="slide-wrapper" v-for="(slide, i) in presentation.slides[currentSlide]" :key="i">
               <span class="pagenum mdl-cell--12-col">Display {{ (i + 1).toString() }}</span>
-              <liveshow-slide :id="slide" :class="(i == 0) ? '': 'selected'"></liveshow-slide>
+              <liveshow-slide :id="slide" :presentation-background="presentation.background" :presentation-foreground="presentation.foreground" :presentation-accent="presentation.accent" :class="(i == 0) ? '': 'selected'"></liveshow-slide>
             </div>
           </div>
           <div class="mdl-cell mdl-shadow--2dp mdl-cell--3-col mdl-cell--12-col-phone mdl-cell--12-col-tablet mdl-card">

@@ -1,8 +1,8 @@
 <template>
   <div class="aspect">
     <div class="stretch">
-      <div class="mdl-card mdl-shadow--2dp slide" v-bind:class="slide.type">
-        <slide-content v-for="(id, i) in slide.content" :id="id" :key="i"></slide-content>
+      <div class="mdl-card mdl-shadow--2dp slide" :class="slide.type" :style="{'background-color': background, 'color': foreground}">
+        <slide-content v-for="(id, i) in slide.content" :id="id" :key="i" :foreground="foreground" :accent="accent"></slide-content>
       </div>
     </div>
   </div>
@@ -11,16 +11,36 @@
 <script>
   import SlideContent from './slide-content.vue';
   export default {
-    props: ['id'],
+    props: ['id', 'presentationBackground', 'presentationForeground', 'presentationAccent'],
     data() {
       return {
         slide: {
           "type": "presentation-title",
           "content": [
-            "gmLeKJRJ7fqaNwAr"
+            "0"
           ],
-          "_id": "Jcs7adSPkOFb8qNY"
+          "_id": "0"
         }
+      }
+    },
+    computed: {
+      background() {
+        if (this.slide.background) {
+          return this.slide.background;
+        }
+        return this.presentationBackground;
+      },
+      foreground() {
+        if (this.slide.foreground) {
+          return this.slide.foreground;
+        }
+        return this.presentationForeground;
+      },
+      accent() {
+        if (this.slide.accent) {
+          return this.slide.accent;
+        }
+        return this.presentationAccent;
       }
     },
     components: {
@@ -36,7 +56,7 @@
         loaded() {
           // called when data are laoded or reloaded
           console.log("loaded slide");
-          console.log(slide)
+          console.log(this.slide)
         },
         errored(error) {
           // called when loading is failed
